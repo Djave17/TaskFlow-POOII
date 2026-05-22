@@ -10,12 +10,17 @@ class TareaRepository{
         Tarea(4 , "Tarea de Finanzas", "Realizar ejercicios de guia 7", false, 4),
         )
 
-    fun getTarea(): List<Tarea> {
-        return tareas
+    fun getTarea(id: Int): Tarea? {
+        return tareas.firstOrNull { it.id == id }
     }
 
     fun addTarea(tarea: Tarea) {
-        tareas.add(tarea)
+        val index = tareas.indexOfFirst { it.id == tarea.id }
+        if (index != -1) {
+            tareas[index] = tarea // Edita
+        } else {
+            tareas.add(tarea) // Crea
+        }
     }
 
     fun getTareaById(tarea: Tarea): Tarea {
@@ -34,7 +39,7 @@ class TareaRepository{
     fun toggleTarea(tarea: Tarea){
         val indice = tareas.indexOf(tarea)
         if (indice != -1) {
-            val tareaActualizada = tareas[indice].copy(isComplete = !tareas[indice].isComplete)
+            val tareaActualizada = tareas[indice].copy(completado = !tareas[indice].completado)
             tareas[indice] = tareaActualizada
         }
 
