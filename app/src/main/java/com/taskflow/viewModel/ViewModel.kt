@@ -10,11 +10,13 @@ import com.taskflow.repository.TareaRepository
 class TareaViewModel: ViewModel() {
     private val repository = TareaRepository()
 
-    var tasks by mutableStateOf(repository.getTarea())
+    var tasks by mutableStateOf(repository.getTareas())
         private set
 
     var id by mutableStateOf("")
+        private set
     var titulo by mutableStateOf("")
+        private set
     var completado by mutableStateOf(false)
     var prioridad by mutableStateOf("Media")
 
@@ -35,22 +37,23 @@ class TareaViewModel: ViewModel() {
         this.prioridad = newPriority
     }
 
+    fun loadTareas() {
+        tasks = repository.getTareas()
+    }
 
-    fun loadTarea(tareaId: Int?) {
-        if (tareaId == null) {
+    fun loadTarea(taskId: Int?) {
+        if (taskId == null) {
             clearForm()
             return
         }
 
-        val task = repository.getTarea(tareaId)
+        val task = repository.getTareaById(taskId)
         task?.let {
             id = it.id.toString()
             titulo = it.titulo
-            completado = it.completado  // note: model field name is 'completado' in Tarea
+            completado = it.completado
             prioridad = prioridadIntToString(it.prioridad)
         } ?: clearForm()
-
-
     }
 
 

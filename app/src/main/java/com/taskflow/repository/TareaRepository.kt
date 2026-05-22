@@ -10,9 +10,11 @@ class TareaRepository{
         Tarea(4 , "Tarea de Finanzas", "Realizar ejercicios de guia 7", false, 4),
         )
 
-    fun getTarea(id: Int): Tarea? {
-        return tareas.firstOrNull { it.id == id }
+    fun getTareas(): List<Tarea> {
+        return tareas.sortedWith(compareBy({ it.prioridad }, { it.completado }))
     }
+
+    fun getTarea(): List<Tarea> = getTareas()
 
     fun addTarea(tarea: Tarea) {
         val index = tareas.indexOfFirst { it.id == tarea.id }
@@ -23,8 +25,8 @@ class TareaRepository{
         }
     }
 
-    fun getTareaById(tarea: Tarea): Tarea {
-        return tareas.firstOrNull { it.id == tarea.id } ?: throw IllegalArgumentException("Tarea no encontrada")
+    fun getTareaById(id: Int): Tarea? {
+        return tareas.firstOrNull { it.id == id }
     }
 
     fun updateTarea(tarea: Tarea){
