@@ -1,4 +1,4 @@
-package com.example.taskvmg2.ui.screen
+package com.taskflow.ui.screen
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,28 +29,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.taskvmg2.ui.navigation.TaskDetail
-import com.example.taskvmg2.ui.viewmodel.TaskViewModel
+import com.taskflow.navigation.TaskDetail
+import com.taskflow.viewModel.TareaViewModel
 
 @Composable
-fun TaskListScreen(navController: NavController,
-                   viewModel: TaskViewModel = viewModel())
-{
+fun TaskListScreen(
+    navController: NavController,
+    viewModel: TareaViewModel = viewModel()
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
-           FloatingActionButton(onClick = {
-               navController.navigate(TaskDetail(-1))
-           }) {
-               Icon(
-                   imageVector = Icons.Default.Add,
-                   contentDescription = "Agregar tarea"
-               )
-           }
-       }
+            FloatingActionButton(onClick = {
+                navController.navigate(TaskDetail(-1))
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Agregar tarea"
+                )
+            }
+        }
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp)
         ) {
@@ -72,30 +74,34 @@ fun TaskListScreen(navController: NavController,
                     items(viewModel.tasks.size) { index ->
                         val task = viewModel.tasks[index]
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp)
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
                                 .fillMaxWidth()
                                 .clickable {
                                     navController.navigate(TaskDetail(task.id))
                                 }
                         ) {
                             Row(
-                                modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text(text = task.title, fontWeight = FontWeight.Bold)
+                                    Text(text = task.titulo, fontWeight = FontWeight.Bold)
                                     Text(
-                                        text = "Prioridad: ${task.priority}", style = MaterialTheme.typography.bodySmall
+                                        text = "Prioridad: ${task.prioridad}",
+                                        style = MaterialTheme.typography.bodySmall
                                     )
                                 }
                                 Checkbox(
-                                    checked = task.completed,
-                                    onCheckedChange = { viewModel.toggleTask(task) }
+                                    checked = task.completado,
+                                    onCheckedChange = { viewModel.toggleTarea(task) }
                                 )
                                 IconButton(
                                     onClick = {
-                                        viewModel.removerTarea(task)
+                                        viewModel.deleteTarea(task)
                                     }
                                 ) {
                                     Icon(
@@ -111,5 +117,4 @@ fun TaskListScreen(navController: NavController,
             }
         }
     }
-
 }

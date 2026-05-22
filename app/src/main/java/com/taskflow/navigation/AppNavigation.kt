@@ -5,7 +5,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import java.lang.reflect.Modifier
+import androidx.compose.ui.Modifier
+import com.taskflow.ui.screen.SplashScreen
+import com.taskflow.ui.screen.TaskDetailScreen
+import com.taskflow.ui.screen.TaskListScreen
 
 @Composable
 fun AppNavigation(modifier: Modifier) {
@@ -13,8 +16,12 @@ fun AppNavigation(modifier: Modifier) {
 
     NavHost(
         navController = navController,
-        startDestination = Splash
+        startDestination = Splash,
+        modifier = modifier
     ){
+        composable<Splash> {
+            SplashScreen(navController = navController)
+        }
         composable<TaskList> {
             TaskListScreen(navController = navController)
         }

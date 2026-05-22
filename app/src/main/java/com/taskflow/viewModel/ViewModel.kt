@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.taskflow.model.Tarea
 import com.taskflow.repository.TareaRepository
 
 
@@ -17,6 +18,8 @@ class TareaViewModel: ViewModel() {
         private set
     var titulo by mutableStateOf("")
         private set
+    var descripcion by mutableStateOf("")
+        private set
     var completado by mutableStateOf(false)
     var prioridad by mutableStateOf("Media")
 
@@ -29,11 +32,15 @@ class TareaViewModel: ViewModel() {
         this.titulo = newTitle
     }
 
+    fun onDescriptionChange(newDescription: String) {
+        this.descripcion = newDescription
+    }
+
     fun onCompletedChange(newCompleted: Boolean) {
         this.completado = newCompleted
     }
 
-    fun onProrityChange(newPriority: String) {
+    fun onPriorityChange(newPriority: String) {
         this.prioridad = newPriority
     }
 
@@ -51,9 +58,35 @@ class TareaViewModel: ViewModel() {
         task?.let {
             id = it.id.toString()
             titulo = it.titulo
+            descripcion = it.descripcion
             completado = it.completado
             prioridad = prioridadIntToString(it.prioridad)
         } ?: clearForm()
+    }
+
+    fun saveTarea() {
+        val tareaId = id.toIntOrNull() ?: return
+
+        repository.addTarea(
+            Tarea(
+                id = tareaId,
+                titulo = titulo,
+                descripcion = descripcion,
+                completado = completado,
+                prioridad = prioridadStringToInt(prioridad)
+            )
+        )
+        loadTareas()
+    }
+
+    fun deleteTarea(tarea: Tarea) {
+        repository.deleteTarea(tarea)
+        loadTareas()
+    }
+
+    fun toggleTarea(tarea: Tarea) {
+        repository.toggleTarea(tarea)
+        loadTareas()
     }
 
 
@@ -65,12 +98,20 @@ class TareaViewModel: ViewModel() {
         else -> "Media"
     }
 
+    private fun prioridadStringToInt(p: String): Int = when (p.trim().lowercase()) {
+        "baja" -> 1
+        "media" -> 2
+        "alta" -> 3
+        "urgente" -> 4
+        else -> 2
+    }
 
 
 
     private fun clearForm(){
         id=""
         titulo=""
+        descripcion=""
         completado=false
         prioridad = "Media"
     }
